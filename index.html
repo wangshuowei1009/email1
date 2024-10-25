@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>邮箱提交</title>
+</head>
+
+<body>
+    <h1>输入你的邮箱</h1>
+    <form id="emailForm">
+        <input type="email" id="email" required placeholder="请输入邮箱地址">
+        <button type="submit">提交</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // 阻止表单默认提交
+            const email = document.getElementById('email').value;
+
+            // 发送请求到 Node.js 服务器
+            fetch('/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('message').innerText = data.message; // 显示服务器返回的信息
+                })
+                .catch((error) => {
+                    console.error('错误:', error);
+                    document.getElementById('message').innerText = '发送邮件时发生错误';
+                });
+        });
+    </script>
+</body>
+
+</html>
